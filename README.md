@@ -1,6 +1,6 @@
 <h1>ExpNo 4 : Implement A* search algorithm for a Graph</h1> 
-<h3>Name:       </h3>
-<h3>Register Number:           </h3>
+<h3>Name: ARAVIND L. S.      </h3>
+<h3>Register Number: 212224060022          </h3>
 <H3>Aim:</H3>
 <p>To ImplementA * Search algorithm for a Graph using Python 3.</p>
 <H3>Algorithm:</H3>
@@ -117,3 +117,84 @@ G 0 <br>
 <h2>Sample Output</h2>
 <hr>
 Path found: ['A', 'E', 'D', 'G']
+
+<h2>PROGRAM: </h2>
+
+```
+import heapq
+from collections import defaultdict
+
+def astar(graph, heuristics, start, goal):
+    open_list = []
+    closed_list = set()
+    
+    g = defaultdict(lambda: float('inf'))
+    g[start] = 0
+    
+    parent = {}
+    parent[start] = None
+    
+    heapq.heappush(open_list, (heuristics[start], start))
+    
+    while open_list:
+        f, current = heapq.heappop(open_list)
+        
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = parent[current]
+            return path[::-1]
+        
+        closed_list.add(current)
+        
+        for neighbor, cost in graph[current]:
+            if neighbor in closed_list:
+                continue
+            
+            tentative_g = g[current] + cost
+            
+            if tentative_g < g[neighbor]:
+                g[neighbor] = tentative_g
+                parent[neighbor] = current
+                f_value = g[neighbor] + heuristics[neighbor]
+                heapq.heappush(open_list, (f_value, neighbor))
+    
+    return None
+
+graph = defaultdict(list)
+
+V, E = map(int, input().split())
+
+for _ in range(E):
+    u, v, w = input().split()
+    w = int(w)
+    graph[u].append((v, w))
+    graph[v].append((u, w))
+
+heuristics = {}
+for _ in range(V):
+    node, h = input().split()
+    heuristics[node] = int(h)
+
+start = list(heuristics.keys())[0]
+
+goal = None
+for node in heuristics:
+    if heuristics[node] == 0:
+        goal = node
+        break
+
+path = astar(graph, heuristics, start, goal)
+
+if path:
+    print("Path found:", path)
+else:
+    print("No path found")
+```
+<h2>Output 1:</h2>
+<img width="873" height="714" alt="image" src="https://github.com/user-attachments/assets/54e985dc-9902-4f5a-a1ad-67e68b0dd194" />
+<h2>Output 2:</h2>
+<img width="870" height="468" alt="image" src="https://github.com/user-attachments/assets/d3dbddc6-a9b6-47e5-831e-fb7236584504" />
+<h2>RESULT:</h2>
+Thus a graph was constructed and implemantation of A star Search for the same graph was done successfully.
